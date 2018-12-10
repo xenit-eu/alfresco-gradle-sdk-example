@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model name="example:model" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+	<description>Example Document Model</description>
+	<author>XeniT Solutions</author>
+	<version>0.1</version>
+	
+	<imports>
+		<import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+		<import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+	</imports>
+	
+	<namespaces>
+		<namespace uri="http://www.xenit.eu/example/model/0.1" prefix="example" />
+	</namespaces>
+
+        <constraints>
+           <constraint name="example:invoiceRegex" type="REGEX">
+              <parameter name="expression"><value>[0-9]{4}-[0-9]{4}</value></parameter>
+	      <parameter name="requiresMatch"><value>true</value></parameter>
+            </constraint>
+            <constraint name="example:grtZero" type="MINMAX">
+              <parameter name="minValue"><value>0</value></parameter>
+            </constraint>
+            <constraint name="example:min3" type="LENGTH">
+              <parameter name="minLength"><value>3</value></parameter>
+            </constraint>
+            <constraint name="example:notEmpty" type="LENGTH">
+              <parameter name="minLength"><value>0</value></parameter>
+            </constraint>
+       </constraints>
+
+	<types>
+		<type name="example:document">
+			<title>example Document</title>
+			<parent>cm:content</parent>
+		</type>
+
+		<type name="example:product">
+			<title>Product</title>
+			<parent>example:document</parent>
+			<properties>
+				<property name="example:region">
+					<title>Region</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+					<multiple>true</multiple>
+					<constraints>
+						<constraint type="LIST">
+							<parameter name="allowedValues">
+								<list>
+									<value>EMEA</value>
+									<value>NCSA</value>
+									<value>NORAM</value>
+									<value>LATAM</value>
+									<value>SEAP</value>
+								</list>
+							</parameter>
+						</constraint>
+					</constraints>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>example:hasProductInfo</aspect>
+				<aspect>cm:generalclassifiable</aspect>
+			</mandatory-aspects>
+		</type>	
+
+		<type name="example:marketing">
+			<title>Marketing</title>
+			<parent>example:document</parent>
+		</type>	
+
+		<type name="example:meeting">
+			<title>Meeting</title>
+			<parent>example:document</parent>
+		</type>
+
+		<type name="example:report">
+			<title>Verslag</title>
+			<parent>example:meeting</parent>
+			<properties>
+				<property name="example:meeting_status">
+					<title>Status</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint type="LIST">
+							<parameter name="allowedValues">
+								<list>
+									<value>Draft</value>
+									<value>Approved</value>
+									<value>Standpunt</value>
+								</list>
+							</parameter>
+						</constraint>
+					</constraints>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>cm:generalclassifiable</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="example:events">
+			<title>Events</title>
+			<parent>example:marketing</parent>
+			<properties>
+				<property name="example:event_id">
+					<title>Event ID</title>
+					<type>d:int</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="example:grtZero" />
+              		                </constraints>
+				</property>
+			</properties>
+		</type>	
+
+		<type name="example:sales">
+			<title>Sales</title>
+			<parent>example:document</parent>
+			<mandatory-aspects>
+				<aspect>example:hasCustomerInfo</aspect>
+			</mandatory-aspects>
+		</type>	
+				
+		<type name="example:rfi">
+			<title>Request For Information</title>
+			<parent>example:sales</parent>
+			<properties>
+				<property name="example:document_rfi_ref">
+					<title>Document RFI Reference</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>example:hasCustomerInfo</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="example:rfp">
+			<title>Request For Proposal</title>
+			<parent>example:sales</parent>
+			<properties>
+				<property name="example:document_rfp_ref">
+					<title>Document RFP Reference</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>example:hasCustomerInfo</aspect>
+			</mandatory-aspects>
+		</type>
+		
+		<type name="example:proposal">
+			<title>Proposal</title>
+			<parent>example:sales</parent>
+			<properties>
+				<property name="example:proposal_ref">
+					<title>Proposal Reference</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="example:notEmpty"/>
+					</constraints>
+				</property>
+				<property name="example:proposal_status">
+					<title>Proposal Status</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint type="LIST">
+							<parameter name="allowedValues">
+								<list>
+									<value>Draft</value>
+									<value>Submitted</value>
+									<value>Shortlisted</value>
+									<value>Won</value>
+									<value>Lost</value>
+								</list>
+							</parameter>
+						</constraint>
+					</constraints>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>example:hasCustomerInfo</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="example:contract">
+			<title>Contract</title>
+			<parent>example:sales</parent>
+			<properties>
+				<property name="example:contract_ref">
+					<title>Contract Reference</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="example:contract_status">
+					<title>Contract Status</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint type="LIST">
+							<parameter name="allowedValues">
+								<list>
+									<value>Draft</value>
+									<value>Signed</value>
+								</list>
+							</parameter>
+						</constraint>
+					</constraints>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>example:hasCustomerInfo</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="example:taskorder">
+			<title>TaskOrder</title>
+			<parent>example:sales</parent>
+			<mandatory-aspects>
+				<aspect>example:hasCustomerInfo</aspect>
+				<aspect>example:hasTaskorderInfo</aspect>
+				<aspect>example:hasProjectInfo</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="example:project">
+			<title>Project</title>
+			<parent>example:document</parent>
+			<mandatory-aspects>
+				<aspect>example:hasCustomerInfo</aspect>
+				<aspect>example:hasTaskorderInfo</aspect>
+				<aspect>example:hasProjectInfo</aspect>
+			</mandatory-aspects>
+		</type>
+		
+		<type name="example:finance">
+			<title>Finance</title>
+			<parent>example:document</parent>
+		</type>	
+		
+		<type name="example:invoice">
+			<title>Invoice</title>
+			<parent>example:finance</parent>
+			<properties>
+				<property name="example:invoice_ref">
+					<title>Invoice Reference</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>true</atomic>
+						<stored>false</stored>
+						<tokenised>both</tokenised>
+					</index>
+					<constraints>
+						<constraint ref="example:invoiceRegex" />
+              		                </constraints>
+				</property>    
+				<property name="example:invoice_paid">
+					<title>Paid</title>
+					<type>d:boolean</type>
+				</property>   
+			</properties>
+			<mandatory-aspects>
+				<aspect>example:hasCustomerInfo</aspect>
+				<aspect>example:hasTaskorderInfo</aspect>
+				<aspect>example:hasProjectInfo</aspect>
+				<aspect>example:hasSupplierInfo</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="example:purchase">
+			<title>Purchase</title>
+			<parent>example:finance</parent>
+			<properties>
+				<property name="example:order_ref">
+					<title>Order Reference</title>
+					<type>d:text</type>
+				</property>
+				<property name="example:purchase_date">
+					<title>Purchase Date</title>
+					<type>d:date</type>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>example:hasSupplierInfo</aspect>
+			</mandatory-aspects>
+		</type>
+
+	</types>
+	
+	<aspects>
+		<aspect name="example:hasCustomerInfo">
+			<title>Customer</title>
+			<properties>
+				<property name="example:customer_name">
+					<title>Customer Name</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>true</atomic>
+						<stored>false</stored>
+						<tokenised>both</tokenised>
+					</index>
+					<constraints>
+						<constraint ref="example:min3" />
+					</constraints>
+				</property>
+			</properties>
+		</aspect>
+		
+		<aspect name="example:hasSupplierInfo">
+			<title>Supplier</title>
+			<properties>
+				<property name="example:supplier_name">
+					<title>Supplier Name</title>
+					<type>d:text</type>
+				</property>
+			</properties>
+		</aspect>
+		
+		<aspect name="example:hasTaskorderInfo">
+			<title>Task Order</title>
+			<properties>
+				<property name="example:taskorder_ref">
+					<title>Task Order Reference</title>
+					<type>d:text</type>
+				</property>
+			</properties>
+		</aspect>
+				
+		<aspect name="example:hasProjectInfo">
+            <title>Project</title>
+            <properties>
+                <property name="example:project_name">
+                    <title>Project Name</title>
+                    <type>d:text</type>
+					<index enabled="true">
+						<atomic>true</atomic>
+						<stored>false</stored>
+						<tokenised>both</tokenised>
+					</index>
+                </property>
+            </properties>
+        </aspect>
+		
+		<aspect name="example:hasProductInfo">
+			<title>Product</title>
+			<properties>
+				<property name="example:product_name">
+					<title>Product Name</title>
+					<type>d:text</type>
+				</property>
+			</properties>
+		</aspect>
+		
+		<aspect name="example:hasAutocompleteAspect">
+			<title>Autocomplete aspect</title>
+			<properties>
+				<property name="example:autocomplete_property">
+					<title>Autocomplete property</title>
+					<type>d:text</type>
+					<index enabled="true">
+                        <atomic>true</atomic>
+                        <stored>false</stored>
+                        <tokenised>both</tokenised>
+                    </index>
+				</property>
+			</properties>
+		</aspect>
+	</aspects>
+
+
+</model>

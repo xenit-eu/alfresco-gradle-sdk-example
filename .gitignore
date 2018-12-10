@@ -1,0 +1,6 @@
+# General
+build
+.gradle
+.idea
+*.swp
+locals

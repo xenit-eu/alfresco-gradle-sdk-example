@@ -1,0 +1,33 @@
+
+wrapper {
+    gradleVersion = '4.9'
+}
+
+version = '0.1.0' + getVersionQualifier(System.env.BRANCH_NAME ?: 'local')
+ext.rootBuildDir = "${rootDir}/build"
+ext.versionFile = "${rootBuildDir}/version"
+
+String getVersionQualifier(String branch_name) {
+    switch (branch_name) {
+        case 'release': return ''; break
+        case 'master': return '-SNAPSHOT'; break
+        default: return '-' + branch_name + '-SNAPSHOT'; break
+    }
+}
+
+task makeVersionFile {
+    group "build"
+    description "Make a file containing the version"
+    outputs.file versionFile
+
+    doLast {
+        file(versionFile).write version
+        println "Version ${version}"
+    }
+}
+
+task clean {
+    doLast {
+        delete rootBuildDir
+    }
+}

@@ -1,0 +1,12 @@
+<!-- For more information, see https://docs.alfresco.com/5.2/tasks/dev-extensions-content-models-tutorials-deploy-model.html -->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+  <bean depends-on="dictionaryBootstrap" id="content-model.dictionaryBootstrapGeneral"
+    parent="dictionaryModelBootstrap">
+    <property name="models">
+      <list>
+        <value>alfresco/module/content-model/model/example-model.xml</value>
+      </list>
+    </property>
+  </bean>
+</beans>
